@@ -12,7 +12,7 @@ What you get is the process, not the source code: the pipeline, drop-in snippets
 ## Install
 
 ```bash
-git clone https://github.com/<owner>/made-in-code ~/.claude/skills/made-in-code
+git clone https://github.com/Jeremy-Sharpe/made-in-code ~/.claude/skills/made-in-code
 ```
 
 Then ask Claude Code something like "make me an animated explainer of this essay, all drawn in code" or "build me a browser boss fight". The skill loads on its own.

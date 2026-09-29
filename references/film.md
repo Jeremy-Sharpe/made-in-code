@@ -95,9 +95,26 @@ the samples: **the person picks the voice by ear**; you rank on numbers.
 Learnt: instruction-style TTS ("speak slowly, unhurried") barely moves pace (every
 candidate ran 160-170 wpm), so you need a real rate control; and one model silently
 **dropped the last sentence**, so transcribe every take and diff it against the script.
-The pick was a hosted neural HD voice with full **SSML**, slowed with
-`<prosody rate="-18%" pitch="-4%">`, which also gave exact `<break>` control for the
-silences before each crane. Slowing in SSML beats time-stretching in post.
+What we used: **Azure AI Speech**, the Andrew HD voice (the `en-US-AndrewMultilingualNeural`
+family), with full **SSML**: slowed with `<prosody rate="-18%" pitch="-4%">`, plus exact
+`<break>` control for the silences before each crane; key in an env var. Slowing in SSML
+beats time-stretching in post. Azure's free tier (F0) gives 0.5 million TTS characters a
+month, but only for standard neural voices: HD voices need a paid tier.
+
+Options (checked late September 2026; confirm before you rely on any row):
+
+| Option | Needs key? | Pace + pause control | Word timestamps? | Licence or cost | When to pick it |
+|---|---|---|---|---|---|
+| Azure AI Speech, HD voice (what we used) | Yes | SSML `<prosody rate>` and `<break time>`: exact | Speech SDK word-boundary events (not checked for HD voices) | Paid; F0 free tier excludes HD | Long narration where pauses must land on exact beats |
+| ElevenLabs Eleven v4 (`eleven_v4`, released 28 Sep 2026; `eleven_v4_turbo` for real time) | Yes | No SSML `<break>` on v4; `speed` setting 0.7-1.2, pauses via audio tags (`[pause]`), ellipses and punctuation | Character-level, via the with-timestamps endpoint (v4 support not confirmed) | Paid per character (launch discount at time of writing); free-plan limits not verified | Most expressive read; voice cloning from ~10 s of audio |
+| Kokoro-82M (local) | No | `speed` argument; pauses via punctuation or silence you splice in | No | Apache-2.0, commercial use OK; runs on CPU or Apple silicon | No key, fast, fixed built-in voices |
+| Chatterbox / Chatterbox-Turbo (local, Resemble AI) | No | `exaggeration` and `cfg_weight` knobs; paralinguistic tags on Turbo; no documented rate control | No | MIT; output carries an imperceptible watermark | No key and you want to clone a voice from a reference clip |
+
+Without exact rate control (ElevenLabs v4, the local models), generate at natural pace,
+insert pauses as spliced digital silence, and stretch only as a last resort.
+
+If the provider returns word (or character) timestamps, you can skip or cross-check the
+local alignment in 2.5; the script is still ground truth.
 
 Per-scene voice script (`voice.py sNN`): read the scene's `VO:` text; one TTS request
 (key in an env var, raw take cached and gitignored; **retry dropped streams**, trap 1);
