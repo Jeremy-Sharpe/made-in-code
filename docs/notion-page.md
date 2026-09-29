@@ -37,6 +37,7 @@ Use the free "made-in-code" playbook at https://github.com/Jeremy-Sharpe/made-in
 4. Then follow the playbook: write the one-page direction and get my OK, build a small working version first, and only then build out the rest. Check your own work with the playbook's methods (render and look at frames, play-test with the bot), and read its traps list whenever something looks wrong.
 
 5. Before starting a big build, tell me roughly how long it will take and what it will cost.
+```
 
 ## What happens next
 
